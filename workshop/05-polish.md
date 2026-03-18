@@ -54,7 +54,7 @@ Now that the app works and looks great, it's time to polish. This part is about 
 <!-- track:cli:start -->
 ## Task 1: Split the Work with `/fleet`
 
-In Copilot CLI, try parallel subagents with a single prompt:
+In Copilot CLI, use `/fleet` to split the work across parallel subagents, then review the combined output:
 
 ```text
 /fleet Improve the app in parallel:

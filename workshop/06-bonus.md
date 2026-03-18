@@ -124,7 +124,7 @@ Let users share their battle results with a single click.
 
 If you want to explore more of Copilot CLI's feature set after the core workshop:
 
-- Use `copilot -sp "Write a conventional commit message for the current git diff"` to generate one-shot output you can paste into Git.
+- Use `copilot -sp "Write a conventional commit message for the current git diff"` to generate a one-shot, response-only answer you can paste into Git.
 - Run `/share file` to save your session as Markdown for later reference.
 - Use `/session` and `/session plan` to inspect how the CLI is tracking your current work.
 <!-- track:cli:end -->
