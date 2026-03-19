@@ -109,7 +109,7 @@ Let's use the built-in `/init` command to generate a workspace instructions file
 1. Open **Copilot Chat** and type:
 
    ```
-   /init simple instructions with a project overview, build/dev commands, and Astro best practices
+   /init simple instructions with a project overview, build/dev commands, and Astro best practices, (ignore the workshop).
    ```
 
 2. Review the generated file — Copilot will analyze your project and create a `.github/copilot-instructions.md`.
@@ -155,7 +155,7 @@ Let's use `/init` to generate a workspace instructions file for Copilot:
 1. In Copilot CLI, type:
 
    ```
-   /init simple instructions with a project overview, build/dev commands, and Astro best practices
+   /init simple instructions with a project overview, build/dev commands, and Astro best practices, (ignore the workshop).
    ```
 
 2. Review the generated file — Copilot will analyze your project and create a `.github/copilot-instructions.md`.
