@@ -61,7 +61,22 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 .markdown code { font-family: 'JetBrains Mono', monospace; font-size: 0.875em; }
 .markdown :not(pre) > code { background: var(--bg-code); padding: 0.2em 0.4em; border-radius: 4px; color: var(--warning-yellow); }
 .code-block-shell { position: relative; margin: 1.5rem 0; }
-.copy-code-btn { position: absolute; top: var(--code-block-control-offset); right: var(--code-block-control-offset); border: 1px solid var(--border-color); border-radius: 999px; background: rgba(10, 10, 15, 0.92); color: var(--text-secondary); padding: 0.35rem 0.75rem; font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; z-index: 1; }
+.copy-code-btn {
+    position: absolute;
+    top: var(--code-block-control-offset);
+    right: var(--code-block-control-offset);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    background: rgba(10, 10, 15, 0.92);
+    color: var(--text-secondary);
+    padding: 0.35rem 0.75rem;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 1;
+}
 .copy-code-btn:hover,
 .copy-code-btn:focus-visible { border-color: var(--neon-cyan); color: var(--neon-cyan); outline: none; box-shadow: 0 0 0 3px rgba(0,245,255,0.12); }
 .copy-code-btn.is-copied { border-color: var(--success-green); color: var(--success-green); }
