@@ -58,7 +58,13 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
 .markdown input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: var(--bg-dark); font-size: 12px; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 .markdown code { font-family: 'JetBrains Mono', monospace; font-size: 0.875em; }
 .markdown :not(pre) > code { background: var(--bg-code); padding: 0.2em 0.4em; border-radius: 4px; color: var(--warning-yellow); }
-.markdown pre { background: var(--bg-code); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin: 1.5rem 0; }
+.code-block-shell { position: relative; margin: 1.5rem 0; }
+.copy-code-btn { position: absolute; top: 0.75rem; right: 0.75rem; border: 1px solid var(--border-color); border-radius: 999px; background: rgba(10, 10, 15, 0.92); color: var(--text-secondary); padding: 0.35rem 0.75rem; font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; z-index: 1; }
+.copy-code-btn:hover,
+.copy-code-btn:focus-visible { border-color: var(--neon-cyan); color: var(--neon-cyan); outline: none; box-shadow: 0 0 0 3px rgba(0,245,255,0.12); }
+.copy-code-btn.is-copied { border-color: var(--success-green); color: var(--success-green); }
+.copy-code-btn.is-error { border-color: #ff6b6b; color: #ff6b6b; }
+.markdown pre { background: var(--bg-code); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.25rem; padding-top: 3.25rem; overflow-x: auto; margin: 0; }
 .markdown pre code { color: var(--text-primary); background: none; padding: 0; }
 .markdown blockquote { background: var(--bg-card); border-left: 4px solid var(--neon-cyan); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; }
 .markdown blockquote p { margin: 0; color: var(--text-secondary); }
@@ -90,5 +96,7 @@ body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; heigh
     .nav-btn, .theme-toggle { flex: 1; justify-content: center; }
     .track-toggle { width: 100%; justify-content: center; }
     .nav-footer { flex-direction: column; }
+    .copy-code-btn { top: 0.625rem; right: 0.625rem; }
+    .markdown pre { padding-top: 3.5rem; }
 }
 .header-icon { font-size: 1.5rem; }

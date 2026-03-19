@@ -255,6 +255,87 @@
             });
         }
 
+        async function copyCodeText(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+                return;
+            }
+
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            textarea.style.pointerEvents = 'none';
+            document.body.appendChild(textarea);
+            textarea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (!successful) {
+                    throw new Error('Copy command was unsuccessful.');
+                }
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function updateCopyButtonState(button, label, stateClass) {
+            button.textContent = label;
+            button.classList.remove('is-copied', 'is-error');
+            if (stateClass) {
+                button.classList.add(stateClass);
+            }
+
+            if (button.resetTimer) {
+                window.clearTimeout(button.resetTimer);
+            }
+
+            button.resetTimer = window.setTimeout(() => {
+                button.textContent = 'Copy';
+                button.classList.remove('is-copied', 'is-error');
+                button.removeAttribute('aria-live');
+            }, 2000);
+        }
+
+        function enableCodeBlockCopyButtons() {
+            const markdown = document.querySelector('#markdownContent .markdown');
+            if (!markdown) return;
+
+            const codeBlocks = Array.from(markdown.querySelectorAll('pre > code'));
+            codeBlocks.forEach((codeBlock, index) => {
+                const pre = codeBlock.parentElement;
+                if (!pre || pre.parentElement?.classList.contains('code-block-shell')) {
+                    return;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-shell';
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+
+                const copyButton = document.createElement('button');
+                copyButton.type = 'button';
+                copyButton.className = 'copy-code-btn';
+                copyButton.textContent = 'Copy';
+                copyButton.setAttribute('aria-label', `Copy code block ${index + 1}`);
+
+                copyButton.addEventListener('click', async () => {
+                    try {
+                        await copyCodeText(codeBlock.textContent || '');
+                        copyButton.setAttribute('aria-live', 'polite');
+                        updateCopyButtonState(copyButton, 'Copied!', 'is-copied');
+                    } catch (error) {
+                        console.error('Unable to copy code block.', error);
+                        copyButton.setAttribute('aria-live', 'polite');
+                        updateCopyButtonState(copyButton, 'Failed', 'is-error');
+                    }
+                });
+
+                wrapper.appendChild(copyButton);
+            });
+        }
+
         async function loadStep(stepId) {
             currentTrack = getTrackFromURL();
             persistTrack(currentTrack);
@@ -287,6 +368,7 @@
                     return `![${alt}](${GITHUB_RAW_BASE}${stepDir}${cleanPath})`;
                 });
                 contentEl.innerHTML = `<div class="markdown">${marked.parse(md)}</div>`;
+                enableCodeBlockCopyButtons();
                 enableTaskListCheckboxes(step.id);
 
                 if (currentIndex === steps.length - 1 && typeof confetti === 'function') {
