@@ -49,7 +49,9 @@ function parseContributionData(data: unknown, username: string): ContributionGra
 	const weeks = (rawData.weeks as Array<Record<string, unknown>>).map(
 		(week) => {
 			const firstDay = String(week.first_day || '');
-			const days = (week.contribution_days as Array<Record<string, unknown>>).map(
+			// Add defensive check: if contribution_days is missing, use empty array
+			const contributionDays = (week.contribution_days as Array<Record<string, unknown>>) || [];
+			const days = contributionDays.map(
 				(day, dayIndex) => {
 					// Calculate the actual date for this day
 					const date = new Date(firstDay);

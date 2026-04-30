@@ -61,25 +61,26 @@ function isRetryableError(error: unknown): boolean {
 		if (msg.includes('fetch') || msg.includes('network')) {
 			return true;
 		}
-	}
 
-	// Treat 429 (rate limit) and 503 (service unavailable) as retryable
-	if (error instanceof Error && error.message.includes('429')) {
-		return true;
-	}
-	if (error instanceof Error && error.message.includes('503')) {
-		return true;
-	}
-
-	// Don't retry 404 or auth errors
-	if (error instanceof Error && error.message.includes('404')) {
-		return false;
-	}
-	if (error instanceof Error && error.message.includes('401')) {
-		return false;
-	}
-	if (error instanceof Error && error.message.includes('403')) {
-		return false;
+		// Extract HTTP status code from error message (e.g., "GitHub returned 500: ...")
+		const statusMatch = msg.match(/(\d{3})/);
+		if (statusMatch) {
+			const statusCode = parseInt(statusMatch[1], 10);
+			
+			// Don't retry client errors (4xx)
+			if (statusCode >= 400 && statusCode < 500) {
+				// Exception: 429 (rate limit) and 408 (timeout) are retryable
+				if (statusCode === 429 || statusCode === 408) {
+					return true;
+				}
+				return false;
+			}
+			
+			// Retry all server errors (5xx)
+			if (statusCode >= 500 && statusCode < 600) {
+				return true;
+			}
+		}
 	}
 
 	return false;
