@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import type { ContributionResponse } from '../../../lib/types';
+import type { ContributionResponse, ContributionGraph } from '../../../lib/types';
 import { fetchGitHubContributions } from '../../../lib/contributions';
 import { getCachedContributions, setCachedContributions } from '../../../lib/cache';
 import { withRetry } from '../../../lib/retry';
@@ -54,10 +54,10 @@ export const GET: APIRoute = async ({ params }): Promise<Response> => {
 	}
 };
 
-function createSuccessResponse(data: unknown): Response {
+function createSuccessResponse(data: ContributionGraph): Response {
 	const response: ContributionResponse = {
 		success: true,
-		data: data as any,
+		data: data,
 	};
 
 	return new Response(JSON.stringify(response), {
