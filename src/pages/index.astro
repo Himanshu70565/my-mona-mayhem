@@ -247,7 +247,7 @@
 			.battle-comparison {
 				display: flex;
 				flex-direction: column;
-				gap: 12px;
+				gap: 8px;
 				flex: 1;
 				overflow: hidden;
 			}
@@ -255,7 +255,7 @@
 			.player-card {
 				background: var(--glass-light);
 				backdrop-filter: blur(12px);
-				padding: 16px;
+				padding: 12px;
 				border: 1px solid rgba(148, 163, 184, 0.1);
 				border-radius: 12px;
 				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -331,10 +331,10 @@
 			}
 
 			.player-stats {
-				font-size: 11px;
+				font-size: 10px;
 				color: var(--text-secondary);
-				margin-bottom: 8px;
-				line-height: 1.6;
+				margin-bottom: 6px;
+				line-height: 1.5;
 				position: relative;
 				z-index: 1;
 				letter-spacing: 0.3px;
@@ -347,11 +347,11 @@
 			}
 
 			.contributions-count {
-				font-size: 24px;
+				font-size: 18px;
 				font-weight: 700;
 				color: var(--accent-cyan);
 				text-align: center;
-				padding: 8px 0;
+				padding: 4px 0;
 				position: relative;
 				z-index: 1;
 				flex-shrink: 0;
@@ -376,21 +376,21 @@
 			}
 
 			.graph-container {
-				margin-top: 12px;
+				margin-top: 8px;
 				position: relative;
 				z-index: 1;
 				flex: 1;
 				overflow: auto;
 				display: flex;
 				flex-direction: column;
-				min-height: 140px;
+				min-height: 90px;
 			}
 
 			.graph-title {
-				font-size: 10px;
+				font-size: 9px;
 				font-weight: 600;
 				color: var(--text-secondary);
-				margin-bottom: 8px;
+				margin-bottom: 4px;
 				letter-spacing: 0.5px;
 				text-transform: uppercase;
 				flex-shrink: 0;
@@ -400,8 +400,8 @@
 				display: grid;
 				grid-template-columns: auto repeat(52, 1fr);
 				grid-template-rows: auto repeat(7, 1fr);
-				gap: 2px;
-				padding: 12px 8px;
+				gap: 1px;
+				padding: 8px 6px;
 				background: rgba(20, 28, 42, 0.5);
 				border: 1px solid rgba(148, 163, 184, 0.15);
 				border-radius: 8px;
@@ -452,20 +452,20 @@
 			}
 
 			.contribution-day {
-				width: 13px;
-				height: 13px;
+				width: 9px;
+				height: 9px;
 				background-color: #e0e6ed;
 				border-radius: 2px;
 				cursor: pointer;
 				transition: all 0.2s ease;
-				border: 1px solid rgba(148, 163, 184, 0.3);
+				border: 0.5px solid rgba(148, 163, 184, 0.3);
 				position: relative;
 			}
 
 			.contribution-day:hover {
-				transform: scale(1.15);
+				transform: scale(1.2);
 				z-index: 100;
-				box-shadow: 0 4px 12px rgba(14, 165, 233, 0.5);
+				box-shadow: 0 2px 8px rgba(14, 165, 233, 0.5);
 				border-color: var(--accent-blue);
 			}
 
