@@ -89,6 +89,7 @@
 			.container.results-visible {
 				justify-content: flex-start;
 				align-items: stretch;
+				padding: 12px 16px;
 			}
 
 			h1 {
@@ -204,7 +205,7 @@
 				border-top: 1px solid rgba(148, 163, 184, 0.1);
 				animation: fadeIn 0.5s ease-out;
 				flex: 1;
-				overflow: hidden;
+				overflow: visible;
 				flex-direction: column;
 			}
 
@@ -354,20 +355,21 @@
 			}
 
 			.graph-container {
-				margin-top: 8px;
+				margin-top: 12px;
 				position: relative;
 				z-index: 1;
 				flex: 1;
-				overflow: hidden;
+				overflow: auto;
 				display: flex;
 				flex-direction: column;
+				min-height: 140px;
 			}
 
 			.graph-title {
 				font-size: 10px;
 				font-weight: 600;
 				color: var(--text-secondary);
-				margin-bottom: 6px;
+				margin-bottom: 8px;
 				letter-spacing: 0.5px;
 				text-transform: uppercase;
 				flex-shrink: 0;
@@ -375,34 +377,62 @@
 
 			.contribution-graph {
 				display: grid;
-				grid-template-columns: repeat(13, 1fr);
-				gap: 4px;
-				padding: 10px;
+				grid-template-columns: auto repeat(52, 1fr);
+				grid-template-rows: auto repeat(7, 1fr);
+				gap: 2px;
+				padding: 12px 8px;
 				background: rgba(20, 28, 42, 0.5);
 				border: 1px solid rgba(148, 163, 184, 0.15);
 				border-radius: 8px;
 				backdrop-filter: blur(8px);
-				flex: 1;
-				min-height: 0;
+				flex: 0 1 auto;
+				overflow-x: auto;
+				overflow-y: hidden;
 			}
 
+			.graph-month-label {
+				font-size: 10px;
+				font-weight: 600;
+				color: var(--text-secondary);
+				text-align: center;
+				padding: 0 2px;
+				grid-row: 1;
+				line-height: 1.4;
+			}
+
+			.graph-day-label {
+				font-size: 10px;
+				font-weight: 600;
+				color: var(--text-secondary);
+				text-align: right;
+				padding-right: 8px;
+				grid-column: 1;
+				line-height: 1.6;
+			}
+
+			.graph-day-label:nth-of-type(1) { grid-row: 2; }
+			.graph-day-label:nth-of-type(2) { grid-row: 3; }
+			.graph-day-label:nth-of-type(3) { grid-row: 4; }
+			.graph-day-label:nth-of-type(4) { grid-row: 5; }
+			.graph-day-label:nth-of-type(5) { grid-row: 6; }
+			.graph-day-label:nth-of-type(6) { grid-row: 7; }
+			.graph-day-label:nth-of-type(7) { grid-row: 8; }
+
 			.contribution-day {
-				min-width: 0;
-				min-height: 0;
-				width: 100%;
+				width: 13px;
+				height: 13px;
 				background-color: #e0e6ed;
-				border-radius: 3px;
+				border-radius: 2px;
 				cursor: pointer;
 				transition: all 0.2s ease;
 				border: 1px solid rgba(148, 163, 184, 0.3);
-				aspect-ratio: 1;
 				position: relative;
 			}
 
 			.contribution-day:hover {
-				transform: scale(1.2);
+				transform: scale(1.15);
 				z-index: 100;
-				box-shadow: 0 8px 16px rgba(14, 165, 233, 0.5);
+				box-shadow: 0 4px 12px rgba(14, 165, 233, 0.5);
 				border-color: var(--accent-blue);
 			}
 
@@ -691,25 +721,80 @@
 					4: '#196127'
 				};
 
-				// Render each day as a colored square with inline styles
+				// Group days by week and day of week to create calendar structure
+				// GitHub shows 7 rows (Mon-Sun) and ~52 columns (weeks)
+				const weeks = new Map(); // Map of week number to [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+				
 				allDays.forEach((day) => {
-					const dayEl = document.createElement('div');
-					const color = colors[day.level] || colors[0];
+					const date = new Date(day.date);
+					const weekStart = new Date(date);
+					weekStart.setDate(date.getDate() - date.getDay()); // Start of week (Sunday)
+					const weekKey = weekStart.toISOString().split('T')[0];
 					
-					// Add class for styling
-					dayEl.className = `contribution-day level-${day.level}`;
+					if (!weeks.has(weekKey)) {
+						weeks.set(weekKey, {});
+					}
+					const dayOfWeek = (date.getDay() + 6) % 7; // Convert to Mon=0, Sun=6
+					weeks.get(weekKey)[dayOfWeek] = day;
+				});
+
+				// Track months for labels
+				const monthLabels = new Map();
+				let currentMonth = '';
+				let monthColumnIndex = 1;
+				let columnIndex = 1;
+
+				// Add day-of-week labels on the left
+				const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+				dayLabels.forEach((label) => {
+					const labelEl = document.createElement('div');
+					labelEl.className = 'graph-day-label';
+					labelEl.textContent = label;
+					graphElement.appendChild(labelEl);
+				});
+
+				// Sort weeks and render
+				const sortedWeeks = Array.from(weeks.entries()).sort();
+				
+				sortedWeeks.forEach(([weekKey, weekDays]) => {
+					// Check for month change and add month label
+					const firstDay = Object.values(weekDays).find(d => d);
+					if (firstDay) {
+						const date = new Date(firstDay.date);
+						const month = date.toLocaleDateString('en-US', { month: 'short' });
+						if (month !== currentMonth) {
+							// Add month label
+							const monthEl = document.createElement('div');
+							monthEl.className = 'graph-month-label';
+							monthEl.textContent = month;
+							monthEl.style.gridColumn = columnIndex + 1; // +1 for day-of-week column
+							monthEl.style.gridRow = '1';
+							graphElement.appendChild(monthEl);
+							currentMonth = month;
+						}
+					}
+
+					// Render 7 days for this week
+					for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+						const day = weekDays[dayOfWeek];
+						const dayEl = document.createElement('div');
+						const color = day ? colors[day.level] || colors[0] : colors[0];
+						
+						dayEl.className = `contribution-day ${day ? `level-${day.level}` : 'level-0'}`;
+						
+						if (day) {
+							const tooltipText = `${day.date}: ${day.count} contribution${day.count !== 1 ? 's' : ''}`;
+							dayEl.setAttribute('data-tooltip', tooltipText);
+						}
+						
+						dayEl.style.backgroundColor = color;
+						dayEl.style.gridColumn = columnIndex + 1; // +1 for day-of-week column
+						dayEl.style.gridRow = dayOfWeek + 2; // +1 for month label row
+						
+						graphElement.appendChild(dayEl);
+					}
 					
-					// Format tooltip text
-					const tooltipText = `${day.date}: ${day.count} contribution${day.count !== 1 ? 's' : ''}`;
-					dayEl.setAttribute('data-tooltip', tooltipText);
-					
-					// Use inline styles to guarantee visibility
-					dayEl.style.display = 'block';
-					dayEl.style.width = '100%';
-					dayEl.style.backgroundColor = color;
-					dayEl.style.cursor = 'pointer';
-					
-					graphElement.appendChild(dayEl);
+					columnIndex++;
 				});
 			}
 
