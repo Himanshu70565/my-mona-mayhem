@@ -161,7 +161,7 @@
 				font-weight: 600;
 				color: var(--text-secondary);
 				margin-bottom: 6px;
-				font-size: 11px;
+				font-size: 15px;
 				letter-spacing: 0.5px;
 				text-transform: uppercase;
 			}
@@ -975,7 +975,6 @@
 
 				// Flatten all days from weeks
 				if (!data.weeks || !Array.isArray(data.weeks)) {
-					console.error('No weeks data', data);
 					return;
 				}
 
@@ -984,8 +983,6 @@
 						allDays.push(...week.days);
 					}
 				});
-
-				console.log('Total days to render:', allDays.length);
 
 				// Define color palette
 				const colors = {
@@ -1058,6 +1055,9 @@
 						const color = day ? colors[day.level] || colors[0] : colors[0];
 						
 						dayEl.className = `contribution-day ${day ? `level-${day.level}` : 'level-0'}`;
+						dayEl.setAttribute('tabindex', '0');
+						dayEl.setAttribute('role', 'button');
+						dayEl.setAttribute('aria-label', day ? `${day.count} contributions on ${day.date}` : `No contributions`);
 						
 						if (day) {
 							const tooltipText = `${day.date}: ${day.count} contribution${day.count !== 1 ? 's' : ''}`;
@@ -1221,6 +1221,14 @@
 						fetch(`/api/contributions/${encodeURIComponent(p2)}`),
 					]);
 
+					// Check HTTP status
+					if (!response1.ok) {
+						throw new Error(`Failed to fetch ${p1}'s contribution data (HTTP ${response1.status})`)
+					}
+					if (!response2.ok) {
+						throw new Error(`Failed to fetch ${p2}'s contribution data (HTTP ${response2.status})`)
+					}
+
 					const data1 = await response1.json();
 					const data2 = await response2.json();
 
@@ -1247,14 +1255,6 @@
 				}
 			});
 
-			// Allow Enter key to trigger battle
-			[player1Input, player2Input].forEach((input) => {
-				input.addEventListener('keypress', (e) => {
-					if (e.key === 'Enter') {
-						battleBtn.click();
-					}
-				});
-			});
 		</script>
 	</body>
 </html>
