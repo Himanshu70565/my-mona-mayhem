@@ -190,6 +190,54 @@
 				box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
 			}
 
+			.player-section input:focus-visible {
+				outline: 2px solid var(--accent-blue);
+				outline-offset: 2px;
+				border-color: var(--accent-blue);
+				background: rgba(30, 41, 59, 0.9);
+				box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.25);
+			}
+
+			.player-section.error input {
+				border-color: #ef4444;
+				background: rgba(239, 68, 68, 0.05);
+			}
+
+			.player-section.error input:focus-visible {
+				outline: 2px solid #ef4444;
+				border-color: #ef4444;
+				box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+			}
+
+			.player-section.valid input {
+				border-color: #10b981;
+				background: rgba(16, 185, 129, 0.05);
+			}
+
+			.player-section.valid input:focus-visible {
+				outline: 2px solid #10b981;
+				border-color: #10b981;
+				box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+			}
+
+			.input-feedback {
+				font-size: 10px;
+				margin-top: 4px;
+				line-height: 1.3;
+				min-height: 16px;
+				display: flex;
+				align-items: center;
+				gap: 4px;
+			}
+
+			.input-feedback.error {
+				color: #fca5a5;
+			}
+
+			.input-feedback.valid {
+				color: #86efac;
+			}
+
 			.battle-button {
 				width: auto;
 				min-width: 200px;
@@ -212,6 +260,11 @@
 			.battle-button:hover:not(:disabled) {
 				transform: translateY(-2px);
 				box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+			}
+
+			.battle-button:focus-visible {
+				outline: 2px solid var(--accent-cyan);
+				outline-offset: 2px;
 			}
 
 			.battle-button:disabled {
@@ -246,10 +299,13 @@
 
 			.battle-comparison {
 				display: flex;
-				flex-direction: column;
+				flex-direction: row;
 				gap: 6px;
 				flex: 1;
 				overflow: hidden;
+				flex-wrap: wrap;
+				align-items: stretch;
+				justify-content: center;
 			}
 
 			.player-card {
@@ -468,6 +524,14 @@
 				box-shadow: 0 2px 8px rgba(14, 165, 233, 0.8);
 			}
 
+			.contribution-day:focus-visible {
+				outline: 2px solid var(--accent-cyan);
+				outline-offset: 1px;
+				transform: scale(1.3);
+				z-index: 100;
+				box-shadow: 0 2px 8px rgba(14, 165, 233, 0.8);
+			}
+
 			.contribution-day::after {
 				content: attr(data-tooltip);
 				position: absolute;
@@ -563,29 +627,161 @@
 				margin-bottom: 12px;
 			}
 
-			@media (max-width: 768px) {
-				.container {
-					padding: 30px 20px;
-				}
-
-				h1 {
-					font-size: 28px;
-				}
-
+			@media (max-width: 1024px) {
 				.battle-comparison {
 					flex-direction: column;
 				}
 
 				.vs-badge {
-					margin: 16px 0;
+					margin: 8px 0;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.container {
+					padding: 20px 16px;
 				}
 
-				.contribution-graph {
-					grid-template-columns: repeat(13, 1fr);
+				h1 {
+					font-size: 24px;
+				}
+
+				.subtitle {
+					font-size: 11px;
+					margin-bottom: 12px;
+				}
+
+				.battle-arena {
+					gap: 8px;
+				}
+
+				.player-section {
+					width: 100%;
+				}
+
+				.player-section input {
+					font-size: 13px;
+					padding: 10px 12px;
+				}
+
+				.battle-button {
+					min-width: 160px;
+					padding: 10px 24px;
+					font-size: 12px;
+				}
+
+				.battle-comparison {
+					flex-direction: column;
+					gap: 4px;
+				}
+
+				.vs-badge {
+					margin: 12px 0;
+					font-size: 12px;
+					padding: 6px;
 				}
 
 				.player-card {
-					padding: 20px;
+					padding: 12px;
+				}
+
+				.player-header {
+					gap: 4px;
+					margin-bottom: 3px;
+				}
+
+				.player-name {
+					font-size: 11px;
+				}
+
+				.player-badge {
+					font-size: 14px;
+					min-width: 28px;
+					padding: 3px 6px;
+				}
+
+				.player-stats {
+					font-size: 8px;
+					margin-bottom: 2px;
+				}
+
+				.contributions-count {
+					font-size: 13px;
+				}
+
+				.graph-container {
+					margin-top: 4px;
+					min-height: 50px;
+				}
+
+				.graph-title {
+					font-size: 7px;
+					margin-bottom: 2px;
+				}
+
+				.contribution-graph {
+					gap: 4px;
+					padding: 6px 2px;
+					grid-template-columns: auto repeat(13, 1fr);
+					grid-template-rows: auto repeat(7, 1fr);
+				}
+
+				.results-title {
+					font-size: 14px;
+					margin-bottom: 10px;
+				}
+
+				.winner-banner {
+					padding: 14px;
+					font-size: 13px;
+					margin-top: 12px;
+				}
+
+				.error-message {
+					font-size: 12px;
+					padding: 12px 14px;
+					margin-bottom: 12px;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.container {
+					padding: 16px 12px;
+				}
+
+				h1 {
+					font-size: 20px;
+				}
+
+				.battle-arena {
+					gap: 6px;
+					max-width: 100%;
+				}
+
+				.player-section input {
+					font-size: 12px;
+					padding: 8px 10px;
+				}
+
+				.battle-button {
+					min-width: 140px;
+					padding: 8px 20px;
+					font-size: 11px;
+				}
+
+				.contribution-graph {
+					grid-template-columns: auto repeat(10, 1fr);
+					gap: 3px;
+					padding: 4px 2px;
+				}
+
+				.contribution-day {
+					width: 5px;
+					height: 5px;
+				}
+
+				.player-card {
+					padding: 10px;
 				}
 			}
 		</style>
@@ -595,26 +791,30 @@
 			<h1>⚔️ Mona Mayhem</h1>
 			<p class="subtitle">GitHub Contribution Battle Arena</p>
 
-			<div class="error-message" id="errorMessage"></div>
+			<div class="error-message" id="errorMessage" role="alert" aria-live="polite" aria-atomic="true"></div>
 
 			<div class="battle-arena">
-				<div class="player-section">
+				<div class="player-section" id="player1Section">
 					<label for="player1">Player 1 Username</label>
-					<input type="text" id="player1" placeholder="e.g., octocat" />
+					<input type="text" id="player1" placeholder="e.g., octocat" aria-describedby="player1-help player1-feedback" />
+					<small id="player1-help" style="font-size: 10px; color: var(--text-secondary); display: block; margin-top: 2px;">Enter a GitHub username to compare</small>
+					<div class="input-feedback" id="player1-feedback" aria-live="polite"></div>
 				</div>
-				<div class="player-section">
+				<div class="player-section" id="player2Section">
 					<label for="player2">Player 2 Username</label>
-					<input type="text" id="player2" placeholder="e.g., torvalds" />
+					<input type="text" id="player2" placeholder="e.g., torvalds" aria-describedby="player2-help player2-feedback" />
+					<small id="player2-help" style="font-size: 10px; color: var(--text-secondary); display: block; margin-top: 2px;">Enter a GitHub username to compare</small>
+					<div class="input-feedback" id="player2-feedback" aria-live="polite"></div>
 				</div>
 			</div>
 
-			<button class="battle-button" id="battleBtn">⚔️ BATTLE</button>
+			<button class="battle-button" id="battleBtn" aria-label="Battle: Compare GitHub contributions between two users. Press Enter after entering both usernames, or click this button.">⚔️ BATTLE</button>
 
-			<div class="results-area" id="resultsArea">
+			<div class="results-area" id="resultsArea" aria-live="polite" aria-label="Battle results comparison showing contribution counts and activity graphs">
 				<div class="results-title">🏆 Battle Results</div>
 
 				<div class="battle-comparison">
-					<div class="player-card" id="player1Card">
+					<div class="player-card" id="player1Card" role="region" aria-label="Player 1 contribution data">
 						<div class="player-header">
 							<div class="player-name" id="player1Name"></div>
 							<div class="player-badge" id="player1Badge"></div>
@@ -632,7 +832,7 @@
 
 					<div class="vs-badge">VS</div>
 
-					<div class="player-card" id="player2Card">
+					<div class="player-card" id="player2Card" role="region" aria-label="Player 2 contribution data">
 						<div class="player-header">
 							<div class="player-name" id="player2Name"></div>
 							<div class="player-badge" id="player2Badge"></div>
@@ -707,6 +907,49 @@
 			const player2Input = document.getElementById('player2');
 			const resultsArea = document.getElementById('resultsArea');
 			const errorMessage = document.getElementById('errorMessage');
+			const player1Section = document.getElementById('player1Section');
+			const player2Section = document.getElementById('player2Section');
+			const player1Feedback = document.getElementById('player1-feedback');
+			const player2Feedback = document.getElementById('player2-feedback');
+
+			function validateUsername(username) {
+				if (!username || username.length === 0) {
+					return { valid: false, message: '⚠️ Username required' };
+				}
+				if (username.length < 2) {
+					return { valid: false, message: '⚠️ Username too short' };
+				}
+				if (username.length > 39) {
+					return { valid: false, message: '⚠️ Username too long' };
+				}
+				return { valid: true, message: '✓ Valid' };
+			}
+
+			function updateFieldValidation(input, feedback, section, otherInput = null) {
+				const value = input.value.trim();
+				const validation = validateUsername(value);
+				
+				if (!value) {
+					section.classList.remove('error', 'valid');
+					feedback.textContent = '';
+					feedback.className = 'input-feedback';
+				} else if (!validation.valid) {
+					section.classList.remove('valid');
+					section.classList.add('error');
+					feedback.className = 'input-feedback error';
+					feedback.textContent = validation.message;
+				} else if (otherInput && otherInput.value.trim() === value) {
+					section.classList.remove('valid');
+					section.classList.add('error');
+					feedback.className = 'input-feedback error';
+					feedback.textContent = '⚠️ Same as other player';
+				} else {
+					section.classList.remove('error');
+					section.classList.add('valid');
+					feedback.className = 'input-feedback valid';
+					feedback.textContent = validation.message;
+				}
+			}
 
 			function formatDateRange(start, end) {
 				try {
@@ -832,6 +1075,19 @@
 				});
 			}
 
+			function addKeyboardSupportToContributionDays() {
+				const days = document.querySelectorAll('.contribution-day');
+				days.forEach((day) => {
+					day.addEventListener('keypress', (e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.preventDefault();
+							// Trigger the same behavior as hover (show tooltip)
+							day.focus();
+						}
+					});
+				});
+			}
+
 			function displayResults(player1, player2) {
 				const p1Data = player1.data;
 				const p2Data = player2.data;
@@ -863,6 +1119,9 @@
 				const player2Graph = document.getElementById('player2Graph');
 				renderContributionGraph(player1Graph, p1Data);
 				renderContributionGraph(player2Graph, p2Data);
+				
+				// Add keyboard accessibility to contribution days
+				addKeyboardSupportToContributionDays();
 
 				// Determine winner and update UI
 				const player1Card = document.getElementById('player1Card');
@@ -898,6 +1157,36 @@
 				// Shift layout from centered to top
 				document.querySelector('.container').classList.add('results-visible');
 			}
+
+			// Add real-time validation listeners
+			player1Input.addEventListener('input', () => {
+				updateFieldValidation(player1Input, player1Feedback, player1Section, player2Input);
+			});
+
+			player1Input.addEventListener('blur', () => {
+				updateFieldValidation(player1Input, player1Feedback, player1Section, player2Input);
+			});
+
+			player2Input.addEventListener('input', () => {
+				updateFieldValidation(player2Input, player2Feedback, player2Section, player1Input);
+			});
+
+			player2Input.addEventListener('blur', () => {
+				updateFieldValidation(player2Input, player2Feedback, player2Section, player1Input);
+			});
+
+			// Allow Enter key to submit
+			player1Input.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter' && player2Input.value.trim()) {
+					battleBtn.click();
+				}
+			});
+
+			player2Input.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter' && player1Input.value.trim()) {
+					battleBtn.click();
+				}
+			});
 
 			battleBtn.addEventListener('click', async () => {
 				const p1 = player1Input.value.trim();
