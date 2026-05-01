@@ -1,0 +1,1260 @@
+---
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Mona Mayhem - GitHub Contribution Battle Arena</title>
+		<style>
+			/* CSS Variables for Modern Glassmorphism Theme */
+			:root {
+				--bg-primary: #0f1419;
+				--bg-secondary: #1a1f2e;
+				--accent-blue: #0ea5e9;
+				--accent-cyan: #06b6d4;
+				--text-primary: #f1f5f9;
+				--text-secondary: #cbd5e1;
+				--glass-light: rgba(30, 41, 59, 0.7);
+				--glass-medium: rgba(20, 28, 42, 0.8);
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			@keyframes slideInUp {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			@keyframes fadeIn {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+
+			@keyframes shimmer {
+				0% { transform: translateX(-100%); }
+				100% { transform: translateX(100%); }
+			}
+
+			@keyframes spin {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+				background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+				min-height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: flex-start;
+				padding: 12px;
+				color: var(--text-primary);
+				position: relative;
+				overflow-y: auto;
+				overflow-x: hidden;
+				scrollbar-width: thin;
+				scrollbar-color: rgba(14, 165, 233, 0.3) transparent;
+			}
+
+			body::-webkit-scrollbar {
+				width: 8px;
+			}
+
+			body::-webkit-scrollbar-track {
+				background: transparent;
+			}
+
+			body::-webkit-scrollbar-thumb {
+				background: rgba(14, 165, 233, 0.3);
+				border-radius: 4px;
+			}
+
+			body::-webkit-scrollbar-thumb:hover {
+				background: rgba(14, 165, 233, 0.5);
+			}
+
+			.container {
+				background: var(--glass-medium);
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(148, 163, 184, 0.1);
+				border-radius: 16px;
+				box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+				padding: 24px 32px;
+				width: 100%;
+				min-height: auto;
+				position: relative;
+				z-index: 2;
+				animation: slideInUp 0.8s ease-out;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.container.results-visible {
+				justify-content: flex-start;
+				align-items: stretch;
+				padding: 12px 16px;
+			}
+
+			h1 {
+				text-align: center;
+				color: var(--text-primary);
+				margin-bottom: 4px;
+				font-size: 28px;
+				font-weight: 700;
+				letter-spacing: -0.5px;
+				transition: all 0.3s ease;
+				order: -1;
+			}
+
+			.subtitle {
+				text-align: center;
+				color: var(--text-secondary);
+				margin-bottom: 16px;
+				font-size: 12px;
+				letter-spacing: 0.5px;
+				font-weight: 400;
+				transition: all 0.3s ease;
+				order: -1;
+			}
+
+			.battle-arena {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				margin-bottom: 12px;
+				flex-shrink: 0;
+				width: 100%;
+				max-width: 500px;
+				align-self: center;
+				transition: all 0.3s ease;
+			}
+
+			.container.results-visible .battle-arena {
+				max-width: 100%;
+				gap: 8px;
+				margin-bottom: 10px;
+			}
+
+			.player-section {
+				width: 100%;
+			}
+
+			.player-section label {
+				display: block;
+				font-weight: 600;
+				color: var(--text-secondary);
+				margin-bottom: 6px;
+				font-size: 15px;
+				letter-spacing: 0.5px;
+				text-transform: uppercase;
+			}
+
+			.player-section input {
+				width: 100%;
+				padding: 8px 12px;
+				border: 1px solid rgba(148, 163, 184, 0.2);
+				background: rgba(30, 41, 59, 0.6);
+				color: var(--text-primary);
+				font-family: inherit;
+				font-size: 12px;
+				border-radius: 8px;
+				transition: all 0.3s ease;
+				backdrop-filter: blur(8px);
+			}
+
+			.player-section input::placeholder {
+				color: rgba(203, 213, 225, 0.5);
+			}
+
+			.player-section input:focus {
+				outline: none;
+				border-color: var(--accent-blue);
+				background: rgba(30, 41, 59, 0.8);
+				box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+			}
+
+			.player-section input:focus-visible {
+				outline: 2px solid var(--accent-blue);
+				outline-offset: 2px;
+				border-color: var(--accent-blue);
+				background: rgba(30, 41, 59, 0.9);
+				box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.25);
+			}
+
+			.player-section.error input {
+				border-color: #ef4444;
+				background: rgba(239, 68, 68, 0.05);
+			}
+
+			.player-section.error input:focus-visible {
+				outline: 2px solid #ef4444;
+				border-color: #ef4444;
+				box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+			}
+
+			.player-section.valid input {
+				border-color: #10b981;
+				background: rgba(16, 185, 129, 0.05);
+			}
+
+			.player-section.valid input:focus-visible {
+				outline: 2px solid #10b981;
+				border-color: #10b981;
+				box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+			}
+
+			.input-feedback {
+				font-size: 10px;
+				margin-top: 4px;
+				line-height: 1.3;
+				min-height: 16px;
+				display: flex;
+				align-items: center;
+				gap: 4px;
+			}
+
+			.input-feedback.error {
+				color: #fca5a5;
+			}
+
+			.input-feedback.valid {
+				color: #86efac;
+			}
+
+			.battle-button {
+				width: auto;
+				min-width: 200px;
+				padding: 10px 32px;
+				background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+				color: white;
+				border: none;
+				border-radius: 8px;
+				font-size: 13px;
+				font-weight: 600;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				margin-bottom: 12px;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+				flex-shrink: 0;
+			}
+
+			.battle-button:hover:not(:disabled) {
+				transform: translateY(-2px);
+				box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+			}
+
+			.battle-button:focus-visible {
+				outline: 2px solid var(--accent-cyan);
+				outline-offset: 2px;
+			}
+
+			.battle-button:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+			}
+
+			.results-area {
+				display: none;
+				margin-top: 12px;
+				padding-top: 12px;
+				border-top: 1px solid rgba(148, 163, 184, 0.1);
+				animation: fadeIn 0.5s ease-out;
+				flex: 1;
+				overflow: visible;
+				flex-direction: column;
+			}
+
+			.results-area.show {
+				display: flex;
+			}
+
+			.results-title {
+				text-align: center;
+				font-size: 16px;
+				font-weight: 700;
+				color: var(--accent-blue);
+				margin-bottom: 12px;
+				letter-spacing: -0.5px;
+				flex-shrink: 0;
+			}
+
+			.battle-comparison {
+				display: flex;
+				flex-direction: row;
+				gap: 6px;
+				flex: 1;
+				overflow: hidden;
+				flex-wrap: wrap;
+				align-items: stretch;
+				justify-content: center;
+			}
+
+			.player-card {
+				background: var(--glass-light);
+				backdrop-filter: blur(12px);
+				padding: 8px;
+				border: 1px solid rgba(148, 163, 184, 0.1);
+				border-radius: 12px;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+				position: relative;
+				overflow: hidden;
+				transition: all 0.3s ease;
+				animation: slideInUp 0.8s ease-out;
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				min-height: 0;
+			}
+
+			.player-card:hover {
+				border-color: rgba(14, 165, 233, 0.2);
+				box-shadow: 0 12px 40px rgba(14, 165, 233, 0.15);
+			}
+
+			.player-card.winner {
+				background: var(--glass-light);
+				border-color: rgba(6, 182, 212, 0.3);
+				box-shadow: 0 12px 40px rgba(6, 182, 212, 0.2);
+			}
+
+			.player-card::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(
+					90deg,
+					transparent,
+					rgba(14, 165, 233, 0.1),
+					transparent
+				);
+				animation: shimmer 3s infinite;
+			}
+
+			.player-header {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin-bottom: 4px;
+				position: relative;
+				z-index: 1;
+				flex-shrink: 0;
+			}
+
+			.player-name {
+				font-weight: 700;
+				color: var(--text-primary);
+				font-size: 12px;
+				letter-spacing: -0.5px;
+			}
+
+			.player-badge {
+				font-size: 16px;
+				padding: 4px 8px;
+				background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+				color: white;
+				font-weight: 600;
+				min-width: 32px;
+				text-align: center;
+				border-radius: 6px;
+				box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+			}
+
+			.player-badge.winner {
+				background: linear-gradient(135deg, #06b6d4, #10b981);
+				box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+			}
+
+			.player-stats {
+				font-size: 9px;
+				color: var(--text-secondary);
+				margin-bottom: 3px;
+				line-height: 1.3;
+				position: relative;
+				z-index: 1;
+				letter-spacing: 0.3px;
+				flex-shrink: 0;
+			}
+
+			.stat-label {
+				font-weight: 600;
+				color: var(--accent-blue);
+			}
+
+			.contributions-count {
+				font-size: 14px;
+				font-weight: 700;
+				color: var(--accent-cyan);
+				text-align: center;
+				padding: 2px 0;
+				position: relative;
+				z-index: 1;
+				flex-shrink: 0;
+			}
+
+			.vs-badge {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+				font-weight: 700;
+				color: white;
+				text-align: center;
+				background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+				padding: 8px;
+				border-radius: 10px;
+				letter-spacing: 0.5px;
+				box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+				width: 100%;
+				margin: 4px 0;
+				flex-shrink: 0;
+			}
+
+			.graph-container {
+				margin-top: 6px;
+				position: relative;
+				z-index: 1;
+				flex: 1;
+				overflow: visible;
+				display: flex;
+				flex-direction: column;
+				min-height: 60px;
+			}
+
+			.graph-title {
+				font-size: 8px;
+				font-weight: 600;
+				color: var(--text-secondary);
+				margin-bottom: 2px;
+				letter-spacing: 0.5px;
+				text-transform: uppercase;
+				flex-shrink: 0;
+			}
+
+			.contribution-graph {
+				display: grid;
+				grid-template-columns: auto repeat(52, 1fr);
+				grid-template-rows: auto repeat(7, 1fr);
+				gap: 6px;
+				padding: 8px 4px;
+				background: rgba(20, 28, 42, 0.5);
+				border: 1px solid rgba(148, 163, 184, 0.15);
+				border-radius: 8px;
+				backdrop-filter: blur(8px);
+				flex: 0 1 auto;
+				overflow-x: auto;
+				overflow-y: hidden;
+				scrollbar-width: thin;
+				scrollbar-color: rgba(14, 165, 233, 0.3) transparent;
+			}
+
+			.contribution-graph::-webkit-scrollbar {
+				height: 8px;
+			}
+
+			.contribution-graph::-webkit-scrollbar-track {
+				background: transparent;
+			}
+
+			.contribution-graph::-webkit-scrollbar-thumb {
+				background: rgba(14, 165, 233, 0.3);
+				border-radius: 4px;
+			}
+
+			.contribution-graph::-webkit-scrollbar-thumb:hover {
+				background: rgba(14, 165, 233, 0.5);
+			}
+
+			.graph-month-label {
+				font-size: 8px;
+				font-weight: 600;
+				color: var(--text-secondary);
+				text-align: center;
+				padding: 0 1px;
+				grid-row: 1;
+				line-height: 1.2;
+				grid-column: span 1;
+			}
+
+			.graph-day-label {
+				font-size: 7px;
+				font-weight: 600;
+				color: var(--text-secondary);
+				text-align: right;
+				padding-right: 4px;
+				grid-column: 1;
+				line-height: 1.4;
+			}
+
+			.contribution-day {
+				width: 6px;
+				height: 6px;
+				background-color: #e0e6ed;
+				border-radius: 1px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				border: none;
+				position: relative;
+			}
+
+			.contribution-day:hover {
+				transform: scale(1.3);
+				z-index: 100;
+				box-shadow: 0 2px 8px rgba(14, 165, 233, 0.8);
+			}
+
+			.contribution-day:focus-visible {
+				outline: 2px solid var(--accent-cyan);
+				outline-offset: 1px;
+				transform: scale(1.3);
+				z-index: 100;
+				box-shadow: 0 2px 8px rgba(14, 165, 233, 0.8);
+			}
+
+			.contribution-day::after {
+				content: attr(data-tooltip);
+				position: absolute;
+				background: rgba(0, 0, 0, 0.9);
+				color: white;
+				padding: 6px 10px;
+				border-radius: 6px;
+				font-size: 10px;
+				white-space: nowrap;
+				pointer-events: none;
+				opacity: 0;
+				transition: opacity 0.2s ease;
+				bottom: 140%;
+				left: 50%;
+				transform: translateX(-50%);
+				z-index: 1000;
+				border: 1px solid rgba(14, 165, 233, 0.4);
+			}
+
+			.contribution-day:hover::after {
+				opacity: 1;
+			}
+
+			.level-0 { 
+				background-color: #e0e6ed;
+				border-color: rgba(148, 163, 184, 0.2);
+			}
+			.level-1 { 
+				background-color: #c6e48b;
+				border-color: rgba(198, 228, 139, 0.4);
+			}
+			.level-2 { 
+				background-color: #7bc96f;
+				border-color: rgba(123, 201, 111, 0.5);
+			}
+			.level-3 { 
+				background-color: #239a3b;
+				border-color: rgba(35, 154, 59, 0.6);
+			}
+			.level-4 { 
+				background-color: #196127;
+				border-color: rgba(25, 97, 39, 0.7);
+			}
+
+			.winner-banner {
+				text-align: center;
+				padding: 18px;
+				background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+				color: white;
+				font-weight: 600;
+				font-size: 15px;
+				margin-top: 24px;
+				border-radius: 12px;
+				letter-spacing: 0.5px;
+				text-transform: uppercase;
+				box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+			}
+
+			.error-message {
+				display: none;
+				padding: 14px 16px;
+				background: rgba(239, 68, 68, 0.1);
+				color: #fca5a5;
+				border: 1px solid rgba(248, 113, 113, 0.3);
+				margin-bottom: 24px;
+				font-size: 13px;
+				border-radius: 10px;
+				letter-spacing: 0.3px;
+				backdrop-filter: blur(8px);
+			}
+
+			.error-message.show {
+				display: block;
+				animation: slideInUp 0.3s ease-out;
+			}
+
+			.loading-spinner {
+				text-align: center;
+				padding: 20px;
+				color: var(--accent-blue);
+				font-size: 13px;
+				letter-spacing: 0.5px;
+			}
+
+			.spinner {
+				display: inline-block;
+				width: 24px;
+				height: 24px;
+				border: 3px solid rgba(14, 165, 233, 0.2);
+				border-top: 3px solid var(--accent-blue);
+				border-radius: 50%;
+				animation: spin 0.8s linear infinite;
+				margin-bottom: 12px;
+			}
+
+			@media (max-width: 1024px) {
+				.battle-comparison {
+					flex-direction: column;
+				}
+
+				.vs-badge {
+					margin: 8px 0;
+				}
+			}
+
+			@media (max-width: 768px) {
+				.container {
+					padding: 20px 16px;
+				}
+
+				h1 {
+					font-size: 24px;
+				}
+
+				.subtitle {
+					font-size: 11px;
+					margin-bottom: 12px;
+				}
+
+				.battle-arena {
+					gap: 8px;
+				}
+
+				.player-section {
+					width: 100%;
+				}
+
+				.player-section input {
+					font-size: 13px;
+					padding: 10px 12px;
+				}
+
+				.battle-button {
+					min-width: 160px;
+					padding: 10px 24px;
+					font-size: 12px;
+				}
+
+				.battle-comparison {
+					flex-direction: column;
+					gap: 4px;
+				}
+
+				.vs-badge {
+					margin: 12px 0;
+					font-size: 12px;
+					padding: 6px;
+				}
+
+				.player-card {
+					padding: 12px;
+				}
+
+				.player-header {
+					gap: 4px;
+					margin-bottom: 3px;
+				}
+
+				.player-name {
+					font-size: 11px;
+				}
+
+				.player-badge {
+					font-size: 14px;
+					min-width: 28px;
+					padding: 3px 6px;
+				}
+
+				.player-stats {
+					font-size: 8px;
+					margin-bottom: 2px;
+				}
+
+				.contributions-count {
+					font-size: 13px;
+				}
+
+				.graph-container {
+					margin-top: 4px;
+					min-height: 50px;
+				}
+
+				.graph-title {
+					font-size: 7px;
+					margin-bottom: 2px;
+				}
+
+				.contribution-graph {
+					gap: 4px;
+					padding: 6px 2px;
+					grid-template-columns: auto repeat(13, 1fr);
+					grid-template-rows: auto repeat(7, 1fr);
+				}
+
+				.results-title {
+					font-size: 14px;
+					margin-bottom: 10px;
+				}
+
+				.winner-banner {
+					padding: 14px;
+					font-size: 13px;
+					margin-top: 12px;
+				}
+
+				.error-message {
+					font-size: 12px;
+					padding: 12px 14px;
+					margin-bottom: 12px;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.container {
+					padding: 16px 12px;
+				}
+
+				h1 {
+					font-size: 20px;
+				}
+
+				.battle-arena {
+					gap: 6px;
+					max-width: 100%;
+				}
+
+				.player-section input {
+					font-size: 12px;
+					padding: 8px 10px;
+				}
+
+				.battle-button {
+					min-width: 140px;
+					padding: 8px 20px;
+					font-size: 11px;
+				}
+
+				.contribution-graph {
+					grid-template-columns: auto repeat(10, 1fr);
+					gap: 3px;
+					padding: 4px 2px;
+				}
+
+				.contribution-day {
+					width: 5px;
+					height: 5px;
+				}
+
+				.player-card {
+					padding: 10px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>⚔️ Mona Mayhem</h1>
+			<p class="subtitle">GitHub Contribution Battle Arena</p>
+
+			<div class="error-message" id="errorMessage" role="alert" aria-live="polite" aria-atomic="true"></div>
+
+			<div class="battle-arena">
+				<div class="player-section" id="player1Section">
+					<label for="player1">Player 1 Username</label>
+					<input type="text" id="player1" placeholder="e.g., octocat" aria-describedby="player1-help player1-feedback" />
+					<small id="player1-help" style="font-size: 10px; color: var(--text-secondary); display: block; margin-top: 2px;">Enter a GitHub username to compare</small>
+					<div class="input-feedback" id="player1-feedback" aria-live="polite"></div>
+				</div>
+				<div class="player-section" id="player2Section">
+					<label for="player2">Player 2 Username</label>
+					<input type="text" id="player2" placeholder="e.g., torvalds" aria-describedby="player2-help player2-feedback" />
+					<small id="player2-help" style="font-size: 10px; color: var(--text-secondary); display: block; margin-top: 2px;">Enter a GitHub username to compare</small>
+					<div class="input-feedback" id="player2-feedback" aria-live="polite"></div>
+				</div>
+			</div>
+
+			<button class="battle-button" id="battleBtn" aria-label="Battle: Compare GitHub contributions between two users. Press Enter after entering both usernames, or click this button.">⚔️ BATTLE</button>
+
+			<div class="results-area" id="resultsArea" aria-live="polite" aria-label="Battle results comparison showing contribution counts and activity graphs">
+				<div class="results-title">🏆 Battle Results</div>
+
+				<div class="battle-comparison">
+					<div class="player-card" id="player1Card" role="region" aria-label="Player 1 contribution data">
+						<div class="player-header">
+							<div class="player-name" id="player1Name"></div>
+							<div class="player-badge" id="player1Badge"></div>
+						</div>
+						<div class="player-stats">
+							<div><span class="stat-label">Contributions:</span> <span id="player1Contributions"></span></div>
+							<div><span class="stat-label">Date Range:</span> <span id="player1DateRange"></span></div>
+						</div>
+						<div class="contributions-count" id="player1Count"></div>
+						<div class="graph-container">
+							<div class="graph-title">Last Year Activity</div>
+							<div class="contribution-graph" id="player1Graph"></div>
+						</div>
+					</div>
+
+					<div class="vs-badge">VS</div>
+
+					<div class="player-card" id="player2Card" role="region" aria-label="Player 2 contribution data">
+						<div class="player-header">
+							<div class="player-name" id="player2Name"></div>
+							<div class="player-badge" id="player2Badge"></div>
+						</div>
+						<div class="player-stats">
+							<div><span class="stat-label">Contributions:</span> <span id="player2Contributions"></span></div>
+							<div><span class="stat-label">Date Range:</span> <span id="player2DateRange"></span></div>
+						</div>
+						<div class="contributions-count" id="player2Count"></div>
+						<div class="graph-container">
+							<div class="graph-title">Last Year Activity</div>
+							<div class="contribution-graph" id="player2Graph"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="winner-banner" id="winnerBanner"></div>
+			</div>
+		</div>
+
+		<script>
+			// TypeScript-like type documentation (JSDoc comments)
+			/**
+			 * @typedef {Object} ContributionDay
+			 * @property {string} date
+			 * @property {number} count
+			 * @property {0|1|2|3|4} level
+			 */
+
+			/**
+			 * @typedef {Object} ContributionWeek
+			 * @property {ContributionDay[]} days
+			 */
+
+			/**
+			 * @typedef {Object} ContributionRange
+			 * @property {string} start
+			 * @property {string} end
+			 */
+
+			/**
+			 * @typedef {Object} ContributionUser
+			 * @property {string} login
+			 * @property {string} name
+			 * @property {string} avatarUrl
+			 */
+
+			/**
+			 * @typedef {Object} ContributionGraph
+			 * @property {ContributionWeek[]} weeks
+			 * @property {number} totalContributions
+			 * @property {ContributionRange} range
+			 * @property {ContributionUser} user
+			 */
+
+			/**
+			 * @typedef {Object} ContributionResponse
+			 * @property {boolean} success
+			 * @property {ContributionGraph} [data]
+			 * @property {string} [error]
+			 * @property {number} [status]
+			 */
+
+			/**
+			 * @typedef {Object} PlayerData
+			 * @property {string} username
+			 * @property {ContributionGraph} data
+			 */
+
+			const battleBtn = document.getElementById('battleBtn');
+			const player1Input = document.getElementById('player1');
+			const player2Input = document.getElementById('player2');
+			const resultsArea = document.getElementById('resultsArea');
+			const errorMessage = document.getElementById('errorMessage');
+			const player1Section = document.getElementById('player1Section');
+			const player2Section = document.getElementById('player2Section');
+			const player1Feedback = document.getElementById('player1-feedback');
+			const player2Feedback = document.getElementById('player2-feedback');
+
+			function validateUsername(username) {
+				if (!username || username.length === 0) {
+					return { valid: false, message: '⚠️ Username required' };
+				}
+				if (username.length < 2) {
+					return { valid: false, message: '⚠️ Username too short' };
+				}
+				if (username.length > 39) {
+					return { valid: false, message: '⚠️ Username too long' };
+				}
+				return { valid: true, message: '✓ Valid' };
+			}
+
+			function updateFieldValidation(input, feedback, section, otherInput = null) {
+				const value = input.value.trim();
+				const validation = validateUsername(value);
+				
+				if (!value) {
+					section.classList.remove('error', 'valid');
+					feedback.textContent = '';
+					feedback.className = 'input-feedback';
+				} else if (!validation.valid) {
+					section.classList.remove('valid');
+					section.classList.add('error');
+					feedback.className = 'input-feedback error';
+					feedback.textContent = validation.message;
+				} else if (otherInput && otherInput.value.trim() === value) {
+					section.classList.remove('valid');
+					section.classList.add('error');
+					feedback.className = 'input-feedback error';
+					feedback.textContent = '⚠️ Same as other player';
+				} else {
+					section.classList.remove('error');
+					section.classList.add('valid');
+					feedback.className = 'input-feedback valid';
+					feedback.textContent = validation.message;
+				}
+			}
+
+			function formatDateRange(start, end) {
+				try {
+					const startDate = new Date(start);
+					const endDate = new Date(end);
+					return `${startDate.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+					})} - ${endDate.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+					})}`;
+				} catch {
+					return `${start} - ${end}`;
+				}
+			}
+
+			function renderContributionGraph(graphElement, data) {
+				graphElement.innerHTML = '';
+				const allDays = [];
+
+				// Flatten all days from weeks
+				if (!data.weeks || !Array.isArray(data.weeks)) {
+					return;
+				}
+
+				data.weeks.forEach((week) => {
+					if (week.days && Array.isArray(week.days)) {
+						allDays.push(...week.days);
+					}
+				});
+
+				// Define color palette
+				const colors = {
+					0: '#ebedf0',
+					1: '#c6e48b',
+					2: '#7bc96f',
+					3: '#239a3b',
+					4: '#196127'
+				};
+
+				// Group days by week and day of week to create calendar structure
+				// GitHub shows 7 rows (Mon-Sun) and ~52 columns (weeks)
+				const weeks = new Map(); // Map of week number to [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+				
+				allDays.forEach((day) => {
+					const date = new Date(day.date);
+					const weekStart = new Date(date);
+					weekStart.setDate(date.getDate() - date.getDay()); // Start of week (Sunday)
+					const weekKey = weekStart.toISOString().split('T')[0];
+					
+					if (!weeks.has(weekKey)) {
+						weeks.set(weekKey, {});
+					}
+					const dayOfWeek = (date.getDay() + 6) % 7; // Convert to Mon=0, Sun=6
+					weeks.get(weekKey)[dayOfWeek] = day;
+				});
+
+				// Track months for labels
+				const monthLabels = new Map();
+				let currentMonth = '';
+				let monthColumnIndex = 1;
+				let columnIndex = 1;
+
+				// Add day-of-week labels on the left
+				const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+				dayLabels.forEach((label, index) => {
+					const labelEl = document.createElement('div');
+					labelEl.className = 'graph-day-label';
+					labelEl.textContent = label;
+					labelEl.style.gridRow = index + 2; // Rows 2-8 for days
+					labelEl.style.gridColumn = '1';
+					graphElement.appendChild(labelEl);
+				});
+
+				// Sort weeks and render
+				const sortedWeeks = Array.from(weeks.entries()).sort();
+				
+				sortedWeeks.forEach(([weekKey, weekDays]) => {
+					// Check for month change and add month label
+					const firstDay = Object.values(weekDays).find(d => d);
+					if (firstDay) {
+						const date = new Date(firstDay.date);
+						const month = date.toLocaleDateString('en-US', { month: 'short' });
+						if (month !== currentMonth) {
+							// Add month label
+							const monthEl = document.createElement('div');
+							monthEl.className = 'graph-month-label';
+							monthEl.textContent = month;
+							monthEl.style.gridColumn = columnIndex + 1; // +1 for day-of-week column
+							monthEl.style.gridRow = '1';
+							graphElement.appendChild(monthEl);
+							currentMonth = month;
+						}
+					}
+
+					// Render 7 days for this week
+					for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+						const day = weekDays[dayOfWeek];
+						const dayEl = document.createElement('div');
+						const color = day ? colors[day.level] || colors[0] : colors[0];
+						
+						dayEl.className = `contribution-day ${day ? `level-${day.level}` : 'level-0'}`;
+						dayEl.setAttribute('tabindex', '0');
+						dayEl.setAttribute('role', 'button');
+						dayEl.setAttribute('aria-label', day ? `${day.count} contributions on ${day.date}` : `No contributions`);
+						
+						if (day) {
+							const tooltipText = `${day.date}: ${day.count} contribution${day.count !== 1 ? 's' : ''}`;
+							dayEl.setAttribute('data-tooltip', tooltipText);
+						}
+						
+						dayEl.style.backgroundColor = color;
+						dayEl.style.gridColumn = columnIndex + 1; // +1 for day-of-week column
+						dayEl.style.gridRow = dayOfWeek + 2; // +1 for month label row
+						
+						graphElement.appendChild(dayEl);
+					}
+					
+					columnIndex++;
+				});
+			}
+
+			function addKeyboardSupportToContributionDays() {
+				const days = document.querySelectorAll('.contribution-day');
+				days.forEach((day) => {
+					day.addEventListener('keypress', (e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.preventDefault();
+							// Trigger the same behavior as hover (show tooltip)
+							day.focus();
+						}
+					});
+				});
+			}
+
+			function displayResults(player1, player2) {
+				const p1Data = player1.data;
+				const p2Data = player2.data;
+
+				// Update player 1
+				document.getElementById('player1Name').textContent = player1.username;
+				document.getElementById('player1Contributions').textContent =
+					p1Data.totalContributions.toLocaleString();
+				document.getElementById('player1Count').textContent =
+					p1Data.totalContributions.toLocaleString();
+				document.getElementById('player1DateRange').textContent = formatDateRange(
+					p1Data.range.start,
+					p1Data.range.end
+				);
+
+				// Update player 2
+				document.getElementById('player2Name').textContent = player2.username;
+				document.getElementById('player2Contributions').textContent =
+					p2Data.totalContributions.toLocaleString();
+				document.getElementById('player2Count').textContent =
+					p2Data.totalContributions.toLocaleString();
+				document.getElementById('player2DateRange').textContent = formatDateRange(
+					p2Data.range.start,
+					p2Data.range.end
+				);
+
+				// Render contribution graphs
+				const player1Graph = document.getElementById('player1Graph');
+				const player2Graph = document.getElementById('player2Graph');
+				renderContributionGraph(player1Graph, p1Data);
+				renderContributionGraph(player2Graph, p2Data);
+				
+				// Add keyboard accessibility to contribution days
+				addKeyboardSupportToContributionDays();
+
+				// Determine winner and update UI
+				const player1Card = document.getElementById('player1Card');
+				const player2Card = document.getElementById('player2Card');
+				const player1Badge = document.getElementById('player1Badge');
+				const player2Badge = document.getElementById('player2Badge');
+				const winnerBanner = document.getElementById('winnerBanner');
+
+				player1Card.classList.remove('winner');
+				player2Card.classList.remove('winner');
+				player1Badge.classList.remove('winner');
+				player2Badge.classList.remove('winner');
+
+				if (p1Data.totalContributions > p2Data.totalContributions) {
+					player1Card.classList.add('winner');
+					player1Badge.classList.add('winner');
+					player1Badge.textContent = '👑';
+					player2Badge.textContent = '';
+					winnerBanner.textContent = `🏆 ${player1.username} Wins with ${p1Data.totalContributions.toLocaleString()} contributions!`;
+				} else if (p2Data.totalContributions > p1Data.totalContributions) {
+					player2Card.classList.add('winner');
+					player2Badge.classList.add('winner');
+					player2Badge.textContent = '👑';
+					player1Badge.textContent = '';
+					winnerBanner.textContent = `🏆 ${player2.username} Wins with ${p2Data.totalContributions.toLocaleString()} contributions!`;
+				} else {
+					player1Badge.textContent = '🤝';
+					player2Badge.textContent = '🤝';
+					winnerBanner.textContent = `🤝 It's a Tie! Both have ${p1Data.totalContributions.toLocaleString()} contributions`;
+				}
+
+				resultsArea.classList.add('show');
+				// Shift layout from centered to top
+				document.querySelector('.container').classList.add('results-visible');
+			}
+
+			// Add real-time validation listeners
+			player1Input.addEventListener('input', () => {
+				updateFieldValidation(player1Input, player1Feedback, player1Section, player2Input);
+			});
+
+			player1Input.addEventListener('blur', () => {
+				updateFieldValidation(player1Input, player1Feedback, player1Section, player2Input);
+			});
+
+			player2Input.addEventListener('input', () => {
+				updateFieldValidation(player2Input, player2Feedback, player2Section, player1Input);
+			});
+
+			player2Input.addEventListener('blur', () => {
+				updateFieldValidation(player2Input, player2Feedback, player2Section, player1Input);
+			});
+
+			// Allow Enter key to submit
+			player1Input.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter' && player2Input.value.trim()) {
+					battleBtn.click();
+				}
+			});
+
+			player2Input.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter' && player1Input.value.trim()) {
+					battleBtn.click();
+				}
+			});
+
+			battleBtn.addEventListener('click', async () => {
+				const p1 = player1Input.value.trim();
+				const p2 = player2Input.value.trim();
+
+				// Clear previous results
+				errorMessage.classList.remove('show');
+				errorMessage.textContent = '';
+				resultsArea.classList.remove('show');
+
+				// Validation
+				if (!p1 || !p2) {
+					errorMessage.textContent = '⚠️ Please enter both usernames';
+					errorMessage.classList.add('show');
+					return;
+				}
+
+				if (p1 === p2) {
+					errorMessage.textContent = '⚠️ Please enter two different usernames';
+					errorMessage.classList.add('show');
+					return;
+				}
+
+				// Disable button during fetch
+				battleBtn.disabled = true;
+				battleBtn.textContent = '⚔️ BATTLING...';
+
+				try {
+					// Fetch both players in parallel
+					const [response1, response2] = await Promise.all([
+						fetch(`/api/contributions/${encodeURIComponent(p1)}`),
+						fetch(`/api/contributions/${encodeURIComponent(p2)}`),
+					]);
+
+					// Check HTTP status
+					if (!response1.ok) {
+						throw new Error(`Failed to fetch ${p1}'s contribution data (HTTP ${response1.status})`)
+					}
+					if (!response2.ok) {
+						throw new Error(`Failed to fetch ${p2}'s contribution data (HTTP ${response2.status})`)
+					}
+
+					const data1 = await response1.json();
+					const data2 = await response2.json();
+
+					// Check for errors
+					if (!data1.success || !data1.data) {
+						throw new Error(data1.error || `Failed to fetch ${p1}'s contribution data`);
+					}
+					if (!data2.success || !data2.data) {
+						throw new Error(data2.error || `Failed to fetch ${p2}'s contribution data`);
+					}
+
+					// Display results with graphs
+					displayResults(
+						{ username: p1, data: data1.data },
+						{ username: p2, data: data2.data }
+					);
+				} catch (error) {
+					const message = error instanceof Error ? error.message : 'An error occurred';
+					errorMessage.textContent = `❌ ${message}`;
+					errorMessage.classList.add('show');
+				} finally {
+					battleBtn.disabled = false;
+					battleBtn.textContent = '⚔️ BATTLE';
+				}
+			});
+
+		</script>
+	</body>
+</html>
