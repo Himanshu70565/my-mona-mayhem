@@ -82,6 +82,13 @@
 				display: flex;
 				flex-direction: column;
 				overflow: hidden;
+				justify-content: center;
+				align-items: center;
+			}
+
+			.container.results-visible {
+				justify-content: flex-start;
+				align-items: stretch;
 			}
 
 			h1 {
@@ -91,6 +98,8 @@
 				font-size: 28px;
 				font-weight: 700;
 				letter-spacing: -0.5px;
+				transition: all 0.3s ease;
+				order: -1;
 			}
 
 			.subtitle {
@@ -100,6 +109,8 @@
 				font-size: 12px;
 				letter-spacing: 0.5px;
 				font-weight: 400;
+				transition: all 0.3s ease;
+				order: -1;
 			}
 
 			.battle-arena {
@@ -108,6 +119,16 @@
 				gap: 10px;
 				margin-bottom: 12px;
 				flex-shrink: 0;
+				width: 100%;
+				max-width: 500px;
+				align-self: center;
+				transition: all 0.3s ease;
+			}
+
+			.container.results-visible .battle-arena {
+				max-width: 100%;
+				gap: 8px;
+				margin-bottom: 10px;
 			}
 
 			.player-section {
@@ -355,10 +376,10 @@
 			.contribution-graph {
 				display: grid;
 				grid-template-columns: repeat(13, 1fr);
-				gap: 3px;
-				padding: 8px;
+				gap: 4px;
+				padding: 10px;
 				background: rgba(20, 28, 42, 0.5);
-				border: 1px solid rgba(148, 163, 184, 0.1);
+				border: 1px solid rgba(148, 163, 184, 0.15);
 				border-radius: 8px;
 				backdrop-filter: blur(8px);
 				flex: 1;
@@ -369,34 +390,64 @@
 				min-width: 0;
 				min-height: 0;
 				width: 100%;
-				background-color: rgba(70, 78, 84, 0.4);
-				border-radius: 4px;
+				background-color: #e0e6ed;
+				border-radius: 3px;
 				cursor: pointer;
 				transition: all 0.2s ease;
-				border: 1px solid rgba(148, 163, 184, 0.1);
+				border: 1px solid rgba(148, 163, 184, 0.3);
 				aspect-ratio: 1;
+				position: relative;
 			}
 
 			.contribution-day:hover {
-				transform: scale(1.15);
-				z-index: 10;
-				box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+				transform: scale(1.2);
+				z-index: 100;
+				box-shadow: 0 8px 16px rgba(14, 165, 233, 0.5);
+				border-color: var(--accent-blue);
+			}
+
+			.contribution-day::after {
+				content: attr(data-tooltip);
+				position: absolute;
+				background: rgba(0, 0, 0, 0.9);
+				color: white;
+				padding: 6px 10px;
+				border-radius: 6px;
+				font-size: 11px;
+				white-space: nowrap;
+				pointer-events: none;
+				opacity: 0;
+				transition: opacity 0.2s ease;
+				bottom: 120%;
+				left: 50%;
+				transform: translateX(-50%);
+				z-index: 101;
+				border: 1px solid rgba(14, 165, 233, 0.4);
+			}
+
+			.contribution-day:hover::after {
+				opacity: 1;
 			}
 
 			.level-0 { 
-				background-color: rgba(70, 78, 84, 0.3);
+				background-color: #e0e6ed;
+				border-color: rgba(148, 163, 184, 0.2);
 			}
 			.level-1 { 
-				background-color: rgba(14, 165, 233, 0.2);
+				background-color: #c6e48b;
+				border-color: rgba(198, 228, 139, 0.4);
 			}
 			.level-2 { 
-				background-color: rgba(14, 165, 233, 0.4);
+				background-color: #7bc96f;
+				border-color: rgba(123, 201, 111, 0.5);
 			}
 			.level-3 { 
-				background-color: rgba(14, 165, 233, 0.6);
+				background-color: #239a3b;
+				border-color: rgba(35, 154, 59, 0.6);
 			}
 			.level-4 { 
-				background-color: rgba(6, 182, 212, 0.8);
+				background-color: #196127;
+				border-color: rgba(25, 97, 39, 0.7);
 			}
 
 			.winner-banner {
@@ -645,30 +696,18 @@
 					const dayEl = document.createElement('div');
 					const color = colors[day.level] || colors[0];
 					
+					// Add class for styling
+					dayEl.className = `contribution-day level-${day.level}`;
+					
+					// Format tooltip text
+					const tooltipText = `${day.date}: ${day.count} contribution${day.count !== 1 ? 's' : ''}`;
+					dayEl.setAttribute('data-tooltip', tooltipText);
+					
 					// Use inline styles to guarantee visibility
 					dayEl.style.display = 'block';
 					dayEl.style.width = '100%';
-					dayEl.style.paddingBottom = '100%';
-					dayEl.style.position = 'relative';
 					dayEl.style.backgroundColor = color;
-					dayEl.style.borderRadius = '3px';
 					dayEl.style.cursor = 'pointer';
-					dayEl.style.border = '1px solid rgba(0,0,0,0.1)';
-					dayEl.style.minHeight = '16px';
-					dayEl.style.transition = 'all 0.2s';
-					
-					dayEl.title = `${day.date}: ${day.count} contributions`;
-					
-					dayEl.addEventListener('mouseenter', () => {
-						dayEl.style.transform = 'scale(1.25)';
-						dayEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-						dayEl.style.zIndex = '10';
-					});
-					
-					dayEl.addEventListener('mouseleave', () => {
-						dayEl.style.transform = 'scale(1)';
-						dayEl.style.boxShadow = 'none';
-					});
 					
 					graphElement.appendChild(dayEl);
 				});
@@ -737,6 +776,8 @@
 				}
 
 				resultsArea.classList.add('show');
+				// Shift layout from centered to top
+				document.querySelector('.container').classList.add('results-visible');
 			}
 
 			battleBtn.addEventListener('click', async () => {
